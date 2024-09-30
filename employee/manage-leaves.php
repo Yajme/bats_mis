@@ -239,7 +239,7 @@
                         </select>
                       </div>
                     </div>
-
+                   
                     <div class="row mb-3">
                       <label class="col-sm-2 col-form-label" for="basic-default-message">File</label>
                       <div class="col-sm-10">
@@ -250,8 +250,8 @@
                           ?>
 
 
-                          <a href="https://csc.gov.ph/downloads/category/298-mc-no-05-s-2021-amendment-to-omnibus-rules-on-leave-csc-mc-no-41-s-1998-as-amended"
-                            class="btn btn-success m-1" target="_blank">Download Leave Files</a>
+                          <a href="./employee-leave-file.php?emp_id=<?php echo $_SESSION['employee_id'] ?>"
+                            class="btn btn-success m-1" target="_blank" id="downloadFile">Download Leave Files</a>
                           <?php
                         } else {
 

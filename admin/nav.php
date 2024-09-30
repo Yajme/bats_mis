@@ -151,7 +151,7 @@ if ($resultuserdata->num_rows > 0) {
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="manage-tof.php" class="menu-link">
+                  <a href="manage-tof-emp.php" class="menu-link">
                     <div data-i18n="Text Divider">Travel Order Form</div>
                   </a>
                 </li>

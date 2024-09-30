@@ -2,7 +2,20 @@
 
 
 
+function monthlySelection(){
+    $options = '<option value="All">All</option>';
+    $months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
 
+    
+    foreach($months as $index=> $month){
+        $options += '<option value="' . ($index + 1) . '">' . $month . '</option>';
+    }
+
+    return $options;
+}
 function displayDailyLogs($conn)
 {
     $sql = "SELECT * FROM employeedetails inner join attendance on attendance.user_id = employeedetails.employee_id group by employee_id";
@@ -33,8 +46,28 @@ function displayDailyLogs($conn)
                             echo "<td>" . $row["employment_type"] . "</td>";
                         
                             echo "<td>" . date("F j, Y", strtotime($row["date"])) . "</td>";
-                            echo "<td>" .'<a target="_blank" href="dtrtable.php?e_id='.$row["user_id"].'" class="btn btn-success">View Monthly Logs</a>'.  "</td>";
-
+                            echo "<td>" .'<a id="viewLogs'.$row["user_id"].'" target="_blank" href="dtrtable.php?e_id='.$row["user_id"].'&month=All" class="btn btn-success">View Monthly Logs</a>'. 
+                            '<select name="leave_type" id="leave_type'.$row["user_id"].'" class="form-control" onChange="updateHref('.$row["user_id"].')">' 
+                            .
+                            '<option value="All">All</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                            '
+                            
+                            .
+                            '</select>'                            
+                            . "</td>";
+                            
 
                             echo "</tr>";
                         }
@@ -42,6 +75,19 @@ function displayDailyLogs($conn)
                         echo "<tr><td colspan='8'>No results found</td></tr>";
                     }
                     ?>
+                    <script>
+                    // Function to update the href attribute of the View Monthly Logs link
+                    function updateHref(id) {
+                        // Get the selected month from the dropdown
+                        var selectedMonth = document.getElementById("leave_type"+id).value;
+
+                        // Get the e_id from the href of the current link
+                        var userId = id;
+
+                        // Update the href attribute of the 'viewLogs' link with the selected month
+                        document.getElementById("viewLogs"+id).href = "dtrtable.php?e_id=" + userId + "&month=" + selectedMonth;
+                    }
+                    </script>
                 </tbody>
                 <tfoot class="table-border-bottom-0">
                     <tr>
@@ -706,7 +752,7 @@ function displayAdminLeaveCredits($conn) {
 
 function displayEmployeeLeaveCredits($conn) {
     // Query for Employee Leave Credits by Month
-    $sql = "SELECT * FROM employee_leavecredits";
+    $sql = "SELECT * FROM view_leave_credits";
     $result = $conn->query($sql);
     
     ?>
@@ -718,42 +764,10 @@ function displayEmployeeLeaveCredits($conn) {
                     <tr>
                         <th>Name</th>
                         <th>Employment Type</th>
-                        <th>Jan Sick Leave</th>
-                        <th>Feb Sick Leave</th>
-                        <th>Mar Sick Leave</th>
-                        <th>Apr Sick Leave</th>
-                        <th>May Sick Leave</th>
-                        <th>Jun Sick Leave</th>
-                        <th>Jul Sick Leave</th>
-                        <th>Aug Sick Leave</th>
-                        <th>Sep Sick Leave</th>
-                        <th>Oct Sick Leave</th>
-                        <th>Nov Sick Leave</th>
-                        <th>Dec Sick Leave</th>
-                        <th>Jan Vacation Leave</th>
-                        <th>Feb Vacation Leave</th>
-                        <th>Mar Vacation Leave</th>
-                        <th>Apr Vacation Leave</th>
-                        <th>May Vacation Leave</th>
-                        <th>Jun Vacation Leave</th>
-                        <th>Jul Vacation Leave</th>
-                        <th>Aug Vacation Leave</th>
-                        <th>Sep Vacation Leave</th>
-                        <th>Oct Vacation Leave</th>
-                        <th>Nov Vacation Leave</th>
-                        <th>Dec Vacation Leave</th>
-                        <th>Jan Special Leave</th>
-                        <th>Feb Special Leave</th>
-                        <th>Mar Special Leave</th>
-                        <th>Apr Special Leave</th>
-                        <th>May Special Leave</th>
-                        <th>Jun Special Leave</th>
-                        <th>Jul Special Leave</th>
-                        <th>Aug Special Leave</th>
-                        <th>Sep Special Leave</th>
-                        <th>Oct Special Leave</th>
-                        <th>Nov Special Leave</th>
-                        <th>Dec Special Leave</th>
+                        <th>Sick Leave Credits</th>
+                        <th>Vacation Leave Credits</th>
+                        <th>Special Leave Credits</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -764,42 +778,9 @@ function displayEmployeeLeaveCredits($conn) {
                             echo "<tr>";
                             echo "<td>" . $row["first_name"] . " " . $row["last_name"] . "</td>";
                             echo "<td>" . $row["employment_type"] . "</td>";
-                            echo "<td>" . $row["Jan_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Feb_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Mar_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Apr_sick_leave"] . "</td>";
-                            echo "<td>" . $row["May_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Jun_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Jul_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Aug_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Sep_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Oct_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Nov_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Dec_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Jan_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Feb_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Mar_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Apr_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["May_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Jun_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Jul_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Aug_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Sep_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Oct_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Nov_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Dec_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Jan_special_leave"] . "</td>";
-                            echo "<td>" . $row["Feb_special_leave"] . "</td>";
-                            echo "<td>" . $row["Mar_special_leave"] . "</td>";
-                            echo "<td>" . $row["Apr_special_leave"] . "</td>";
-                            echo "<td>" . $row["May_special_leave"] . "</td>";
-                            echo "<td>" . $row["Jun_special_leave"] . "</td>";
-                            echo "<td>" . $row["Jul_special_leave"] . "</td>";
-                            echo "<td>" . $row["Aug_special_leave"] . "</td>";
-                            echo "<td>" . $row["Sep_special_leave"] . "</td>";
-                            echo "<td>" . $row["Oct_special_leave"] . "</td>";
-                            echo "<td>" . $row["Nov_special_leave"] . "</td>";
-                            echo "<td>" . $row["Dec_special_leave"] . "</td>";
+                            echo "<td>" . $row["sickCredit"] . "</td>";
+                            echo "<td>" . $row["vacationCredit"] . "</td>";
+                            echo "<td>" . $row["specialCredit"] . "</td>";
                             echo "</tr>";
                         }
                     } else {
@@ -811,42 +792,9 @@ function displayEmployeeLeaveCredits($conn) {
                     <tr>
                         <th>Name</th>
                         <th>Employment Type</th>
-                        <th>Jan Sick Leave</th>
-                        <th>Feb Sick Leave</th>
-                        <th>Mar Sick Leave</th>
-                        <th>Apr Sick Leave</th>
-                        <th>May Sick Leave</th>
-                        <th>Jun Sick Leave</th>
-                        <th>Jul Sick Leave</th>
-                        <th>Aug Sick Leave</th>
-                        <th>Sep Sick Leave</th>
-                        <th>Oct Sick Leave</th>
-                        <th>Nov Sick Leave</th>
-                        <th>Dec Sick Leave</th>
-                        <th>Jan Vacation Leave</th>
-                        <th>Feb Vacation Leave</th>
-                        <th>Mar Vacation Leave</th>
-                        <th>Apr Vacation Leave</th>
-                        <th>May Vacation Leave</th>
-                        <th>Jun Vacation Leave</th>
-                        <th>Jul Vacation Leave</th>
-                        <th>Aug Vacation Leave</th>
-                        <th>Sep Vacation Leave</th>
-                        <th>Oct Vacation Leave</th>
-                        <th>Nov Vacation Leave</th>
-                        <th>Dec Vacation Leave</th>
-                        <th>Jan Special Leave</th>
-                        <th>Feb Special Leave</th>
-                        <th>Mar Special Leave</th>
-                        <th>Apr Special Leave</th>
-                        <th>May Special Leave</th>
-                        <th>Jun Special Leave</th>
-                        <th>Jul Special Leave</th>
-                        <th>Aug Special Leave</th>
-                        <th>Sep Special Leave</th>
-                        <th>Oct Special Leave</th>
-                        <th>Nov Special Leave</th>
-                        <th>Dec Special Leave</th>
+                        <th>Sick Leave Credits</th>
+                        <th>Vacation Leave Credits</th>
+                        <th>Special Leave Credits</th>
                     </tr>
                 </tfoot>
             </table>
@@ -1035,7 +983,7 @@ function displayTravelOrders($conn)
                             echo "<tr>";
                             echo "<td>" . $row["file_id"] . "</td>";
                             echo "<td>" . $row["file_description"] . "</td>";
-                            echo "<td> " . '<iframe src="' . $row["file_path"] . '" frameborder="0" style="width: 400px; height: 500px;"></iframe>' . "</td>";
+                            echo "<td> "  . "</td>";
                             echo "<td>" . $row["uploaded_at"] . "</td>";
                             echo "<td>" . $row["f_status"] . "</td>";
                             echo "<td><a class='btn btn-success m-1' href='" . $row["file_path"] . "' download>Download File</a><br><a class='btn btn-primary m-1' href='manage-tof.php?file_id=" . $row["file_id"] . "'>Edit File</a><br><a class='btn btn-primary m-1' href='manage-tof-emp.php?tofe_id=" . $row["file_id"] . "'>View Listed Employees</a></td>";

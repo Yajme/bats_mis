@@ -74,11 +74,12 @@
     }
 } else {
 
+  //Start Here
 
 
 
     if (isset($_POST['Register'])) {
-        $tof_id = $_POST['tof_id'];
+        $tof_id = 0;
         $e_id1 = $_POST['e_id1'];
       $e_id2 = $_POST['e_id2'];
       $e_id3 = $_POST['e_id3'];
@@ -104,9 +105,10 @@
         $stmt->bind_param("iiiiiiiiiiiiiiiiiiiii", $tof_id, $e_id1,  $e_id2,  $e_id3,  $e_id4,  $e_id5,  $e_id6,  $e_id17,  $e_id8,  $e_id9,  $e_id10,  $e_id11,  $e_id12,  $e_id13,  $e_id14,  $e_id15,  $e_id16,  $e_id17,  $e_id18,  $e_id19,  $e_id20,);
 
         if ($stmt->execute()) {
+          $last_id = $conn->insert_id;
             echo "<script>
                     alert('Insert Employee Information Successful!');
-                    window.location.href = window.location.href;
+                    window.location.href = 'manage-tof.php?tofe=$last_id';
                   </script>";
         } else {
             echo "<script>
@@ -132,12 +134,14 @@
                 </div>
                 <div class="card-body">
                   <form method="post">
+                  <?php  if (isset($fileDataInfo['tofe_id'])) {?> 
                     <div class="row mb-3">
                       <label class="col-sm-2 col-form-label" for="basic-default-id">Employee ID</label>
                       <div class="col-sm-10">
                         <input type="text" name="tofe_id" class="form-control" value="<?php echo $fileDataInfo['tofe_id'] ?? rand(99999, 999999); ?>" id="basic-default-id" placeholder="Employee ID" readonly />
                       </div>
                     </div>
+                    <?php } if (isset($fileDataInfo['tof_id'])) {?> 
                     <div class="row mb-3">
                       <label class="col-sm-2 col-form-label" for="basic-default-tof-id">TOF ID</label>
                       <div class="col-sm-10">
@@ -146,7 +150,7 @@
                     </div>
                    
                     <?php
-                  
+                    }
                     for($i =1; $i<=20;$i++){
                       
 

@@ -119,7 +119,12 @@
       }
     }
   } else {
+    //
+    if(isset($_GET['tofe_id'])){
+      $tofe_id = $_GET['tofe'];
+    }
     if (isset($_POST['Register'])) {
+      $tofe_id = $_GET['tofe'];
       $file = $_FILES['file_path'];
       $rand = rand(9999,999999);
       $filePath = '../files/travel_orders/file_'.$rand.'_' . basename($file['name']);
@@ -132,24 +137,21 @@
       $stmt->bind_param("sss", $file_description, $filePath, $f_status);
 
       if ($stmt->execute()) {
+        $last_id = $conn->insert_id;
+       
 
-        $sql = "SELECT * FROM `travel_order` ORDER BY uploaded_at DESC LIMIT 1";
-        $result = $conn->query($sql);
 
+       
 
-        // output data of each row
-        while ($row = $result->fetch_assoc()) {
-
-          $sql = "INSERT INTO tof_employees (tof_id)
-          VALUES ('".$row['file_id']."')";
+          $sql = "UPDATE tof_employees SET tof_id = $last_id WHERE tofe_id = $tofe_id";
           $conn->query($sql) === TRUE;
 
 
           echo "<script>
   alert('Insert of File Information Successful!');
-  window.location.href = 'manage-tof-emp.php?tofe_id=" . $row['file_id'] . "';
+  window.location.href = window.location.href;
 </script>";
-        }
+        
       } else {
         echo "<script>
                   alert('Insert File Information Error');
@@ -204,7 +206,7 @@
                       <label class="col-sm-2 col-form-label" for="basic-default-file-path">File Path</label>
                       <div class="col-sm-10">
                         <input type="file" name="file_path" class="form-control" accept=".pdf" id="basic-default-file-path" placeholder="File Path" />
-                        <small>Travel Order File Form File: <a href="../files/TORF.docx" target="_blank" class="btn btn-primary m-1" download>Download</a></small>
+                        <small>Travel Order File Form File: <a href="download-tof.php?tofe_id=<?php echo $_GET['tofe']?>" target="_blank" class="btn btn-primary m-1" download>Download</a></small>
                         <?php if (isset($fileDataInfo['file_path'])) : ?>
                           <small>Current file: <a href="<?php echo $fileDataInfo['file_path']; ?>" target="_blank" class="btn btn-primary m-1">Download</a></small>
                         <?php endif; ?>

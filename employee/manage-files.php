@@ -1,4 +1,8 @@
-<?php include ("../model/conne.php"); ?>
+<?php 
+include '../model/conne.php';
+include './create-saln.php';
+include './emp-pds.php';
+ ?>
 <!DOCTYPE html>
 
 
@@ -125,20 +129,35 @@
       }
     }
   } else {
+$filePath;
+    if(isset($_GET['saln'])){
+      $saln = new SALN($conn,'../files/employee/saln/',$_GET['saln']);
+      $saln->CreateSALNFile();
+      $filePath = $saln->getFilePath();
+    
+    }
+    if(isset($_GET['pds'])){
+      $pds = new PDS($conn,'../files/employee/pds/',$_GET['pds']);
+     $pds->createPDSFile();
+      $filePath = $pds->getFilePath();
+    }
     if (isset($_POST['Register'])) {
       $file = $_FILES['file_path'];
-      if($_POST['file_type']=="saln"){
-        $filePath = '../files/employee/saln/' . $_POST['user_id']."-". basename($file['name']);
-        move_uploaded_file($file['tmp_name'], $filePath);
+      if(!isset($filePath)){
+        if($_POST['file_type']=="saln"){
+          $filePath = '../files/employee/saln/' . $_POST['user_id']."-". basename($file['name']);
+          move_uploaded_file($file['tmp_name'], $filePath);
+        }
+        else if($_POST['file_type']=="pds"){
+          $filePath = '../files/employee/pds/' . $_POST['user_id']."-".basename($file['name']);
+          move_uploaded_file($file['tmp_name'], $filePath);
+        }
+        else if($_POST['file_type']=="other"){
+          $filePath = '../files/employee/others/' . $_POST['user_id']."-".basename($file['name']);
+          move_uploaded_file($file['tmp_name'], $filePath);
+        }
       }
-      else if($_POST['file_type']=="pds"){
-        $filePath = '../files/employee/pds/' . $_POST['user_id']."-".basename($file['name']);
-        move_uploaded_file($file['tmp_name'], $filePath);
-      }
-      else if($_POST['file_type']=="other"){
-        $filePath = '../files/employee/others/' . $_POST['user_id']."-".basename($file['name']);
-        move_uploaded_file($file['tmp_name'], $filePath);
-      }
+      
 
       $user_id = $_POST['user_id'];
       $user_type = $_POST['user_type'];
@@ -212,16 +231,23 @@
                       </div>
                     </div>
                     <div class="row mb-3">
+                   
                       <label class="col-sm-2 col-form-label" for="basic-default-file-type">File Type</label>
                       <div class="col-sm-10">
                         <select name="file_type" id="file_type" class="form-control">
-                          
-                          <option <?php echo (isset($fileDataInfo['file_type']) && $fileDataInfo['file_type'] == 'pds') ? "selected" : ""; ?> value="pds">PDS (Excel file)</option>
-                          <option <?php echo (isset($fileDataInfo['file_type']) && $fileDataInfo['file_type'] == 'saln') ? "selected" : ""; ?> value="saln">SALN (PDF File)</option>
-                          <option <?php echo (isset($fileDataInfo['file_type']) && $fileDataInfo['file_type'] == 'other') ? "selected" : ""; ?> value="other">Other</option>
+                          <option <?php echo (isset($fileDataInfo['file_type']) && $fileDataInfo['file_type'] == 'pds') ? "selected" : ""; ?> value="pds">PDS (Excel File)</option>
+                          <option <?php echo (isset($fileDataInfo['file_type']) && $fileDataInfo['file_type'] == 'saln') ? "selected" : "";echo (isset($_GET['saln'])) ? "selected" : "" ?> value="saln">SALN (PDF File)</option>
+                          <option <?php echo (isset($fileDataInfo['file_type']) && $fileDataInfo['file_type'] == 'other') ? "selected" :  ""; ?> value="other">Other</option>
                         </select>
-                        <a class='btn btn-primary m-1' href='../files/saln.doc'  download>Download SALN Format File</a>
-                        <a class='btn btn-primary m-1' href='../files/pds.xlsx'  download>Download PDS Format File</a>
+                        <a class='btn btn-primary m-1' href='SALN.php?eid=<?php echo $_SESSION['employee_id']?>' id='create_saln_btn'>Create SALN File</a>
+                        <a class='btn btn-primary m-1' href='emp-pds-form.php?eid=<?php echo $_SESSION['employee_id']?>'>Create PDS File</a>
+                        <script>
+    document.getElementById('basic-default-user-id').addEventListener('input', function() {
+        const userId = this.value;
+        const createSalnBtn = document.getElementById('create_saln_btn');
+        createSalnBtn.href = `SALN.php?eid=${userId}`;
+    });
+</script>
                       </div>
                     </div>
                     <div class="row mb-3">
@@ -233,7 +259,7 @@
                     <div class="row mb-3">
                       <label class="col-sm-2 col-form-label" for="basic-default-file-path">File Path</label>
                       <div class="col-sm-10">
-                        <input type="file" name="file_path" class="form-control" accept=".xls, .xlsx, .pdf"" id="basic-default-file-path" placeholder="File Path" />
+                        <input type="file" name="file_path" class="form-control" accept=".xls, .xlsx, .pdf" id="basic-default-file-path" placeholder="File Path" />
                         <?php if (isset($fileDataInfo['file_path'])): ?>
                           <small>Current file: <a href="<?php echo $fileDataInfo['file_path']; ?>" target="_blank" class="btn btn-primary m-1">Download</a></small>
                         <?php endif; ?>

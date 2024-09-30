@@ -44,7 +44,8 @@
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (isset($_POST['updateAccount'])) {
     // Retrieve form data
-    $employee_id = $_POST['employee_id'];
+    $employee_id = $_POST['user_id'];// primary key cannot be modified
+    $user_id = $_POST['employee_id']; // so there's another column for it
     $user_name = $_POST['username'];
     $user_password = $_POST['password'];
     $employment_type = $_POST['employment_type'];
@@ -56,10 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Update employee data in the database
     $updateQuery = "UPDATE employeedetails 
-                      SET user_name = ?, user_password = ?, employment_type = ?, first_name = ?, last_name = ?, date_of_birth = ?, email = ?, phone_number = ?
+                      SET user_name = ?, user_password = ?, employment_type = ?, first_name = ?, last_name = ?, date_of_birth = ?, email = ?, phone_number = ?, id =?
                       WHERE employee_id = ?";
     $stmt = $conn->prepare($updateQuery);
-    $stmt->bind_param("ssssssssi", $user_name, $user_password, $employment_type, $first_name, $last_name, $date_of_birth, $email, $phone_number,  $employee_id);
+    $stmt->bind_param("ssssssssii", $user_name, $user_password, $employment_type, $first_name, $last_name, $date_of_birth, $email, $phone_number, $user_id, $employee_id);
     $stmt->execute();
 
     if ($stmt->affected_rows > 0) {
@@ -162,9 +163,14 @@ if (isset($_POST['changeicon']) && isset($_FILES['upload'])) {
                   <form id="formAccountSettings" method="POST">
                     <div class="row">
                       <div class="mb-3 col-md-6">
-                        <label for="firstName" class="form-label">Admin ID</label>
-                        <input class="form-control" type="text" id="firstName" name="employee_id" value="<?= $userData['employee_id']  ?>" readonly autofocus />
+                      <div class="mb-3 col-md-6">
+                        <label for="firstName" class="form-label">UserID ID</label>
+                        <input class="form-control" type="text" id="firstName" name="user_id" value="<?= $userData['employee_id']  ?>"   readonly/>
                       </div>
+                        <label for="firstName" class="form-label">Employee ID</label>
+                        <input class="form-control" type="text" id="firstName" name="employee_id" value="<?= $userData['id']  ?>"   />
+                      </div>
+                      
                       <div class="mb-3 col-md-3">
                         <label for="lastName" class="form-label">First Name</label>
                         <input class="form-control" type="text" name="first_name" id="lastName" value="<?= $userData['first_name']  ?>" />

@@ -671,161 +671,63 @@ function displayAdminLeaveCredits($conn) {
 
 
 function displayEmployeeLeaveCredits($conn, $uid) {
-    // Query for Employee Leave Credits by Month
-    $sql = "SELECT * FROM employee_leavecredits where user_id = $uid";
-    $result = $conn->query($sql);
-    
-    ?>
-    <div class="card">
-        <h5 class="card-header">Employee Leave Credits by Month</h5>
-        <div class="table-responsive text-nowrap">
-            <table class="table" id="zero_config">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Employment Type</th>
-                        <th>Jan Sick Leave</th>
-                        <th>Feb Sick Leave</th>
-                        <th>Mar Sick Leave</th>
-                        <th>Apr Sick Leave</th>
-                        <th>May Sick Leave</th>
-                        <th>Jun Sick Leave</th>
-                        <th>Jul Sick Leave</th>
-                        <th>Aug Sick Leave</th>
-                        <th>Sep Sick Leave</th>
-                        <th>Oct Sick Leave</th>
-                        <th>Nov Sick Leave</th>
-                        <th>Dec Sick Leave</th>
-                        <th>Jan Vacation Leave</th>
-                        <th>Feb Vacation Leave</th>
-                        <th>Mar Vacation Leave</th>
-                        <th>Apr Vacation Leave</th>
-                        <th>May Vacation Leave</th>
-                        <th>Jun Vacation Leave</th>
-                        <th>Jul Vacation Leave</th>
-                        <th>Aug Vacation Leave</th>
-                        <th>Sep Vacation Leave</th>
-                        <th>Oct Vacation Leave</th>
-                        <th>Nov Vacation Leave</th>
-                        <th>Dec Vacation Leave</th>
-                        <th>Jan Special Leave</th>
-                        <th>Feb Special Leave</th>
-                        <th>Mar Special Leave</th>
-                        <th>Apr Special Leave</th>
-                        <th>May Special Leave</th>
-                        <th>Jun Special Leave</th>
-                        <th>Jul Special Leave</th>
-                        <th>Aug Special Leave</th>
-                        <th>Sep Special Leave</th>
-                        <th>Oct Special Leave</th>
-                        <th>Nov Special Leave</th>
-                        <th>Dec Special Leave</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    if ($result->num_rows > 0) {
-                        // Output data of each row
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr>";
-                            echo "<td>" . $row["first_name"] . " " . $row["last_name"] . "</td>";
-                            echo "<td>" . $row["employment_type"] . "</td>";
-                            echo "<td>" . $row["Jan_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Feb_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Mar_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Apr_sick_leave"] . "</td>";
-                            echo "<td>" . $row["May_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Jun_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Jul_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Aug_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Sep_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Oct_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Nov_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Dec_sick_leave"] . "</td>";
-                            echo "<td>" . $row["Jan_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Feb_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Mar_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Apr_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["May_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Jun_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Jul_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Aug_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Sep_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Oct_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Nov_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Dec_vacation_leave"] . "</td>";
-                            echo "<td>" . $row["Jan_special_leave"] . "</td>";
-                            echo "<td>" . $row["Feb_special_leave"] . "</td>";
-                            echo "<td>" . $row["Mar_special_leave"] . "</td>";
-                            echo "<td>" . $row["Apr_special_leave"] . "</td>";
-                            echo "<td>" . $row["May_special_leave"] . "</td>";
-                            echo "<td>" . $row["Jun_special_leave"] . "</td>";
-                            echo "<td>" . $row["Jul_special_leave"] . "</td>";
-                            echo "<td>" . $row["Aug_special_leave"] . "</td>";
-                            echo "<td>" . $row["Sep_special_leave"] . "</td>";
-                            echo "<td>" . $row["Oct_special_leave"] . "</td>";
-                            echo "<td>" . $row["Nov_special_leave"] . "</td>";
-                            echo "<td>" . $row["Dec_special_leave"] . "</td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='37'>No results found</td></tr>";
-                    }
-                    ?>
-                </tbody>
-                <tfoot class="table-border-bottom-0">
-                    <tr>
-                        <th>Name</th>
-                        <th>Employment Type</th>
-                        <th>Jan Sick Leave</th>
-                        <th>Feb Sick Leave</th>
-                        <th>Mar Sick Leave</th>
-                        <th>Apr Sick Leave</th>
-                        <th>May Sick Leave</th>
-                        <th>Jun Sick Leave</th>
-                        <th>Jul Sick Leave</th>
-                        <th>Aug Sick Leave</th>
-                        <th>Sep Sick Leave</th>
-                        <th>Oct Sick Leave</th>
-                        <th>Nov Sick Leave</th>
-                        <th>Dec Sick Leave</th>
-                        <th>Jan Vacation Leave</th>
-                        <th>Feb Vacation Leave</th>
-                        <th>Mar Vacation Leave</th>
-                        <th>Apr Vacation Leave</th>
-                        <th>May Vacation Leave</th>
-                        <th>Jun Vacation Leave</th>
-                        <th>Jul Vacation Leave</th>
-                        <th>Aug Vacation Leave</th>
-                        <th>Sep Vacation Leave</th>
-                        <th>Oct Vacation Leave</th>
-                        <th>Nov Vacation Leave</th>
-                        <th>Dec Vacation Leave</th>
-                        <th>Jan Special Leave</th>
-                        <th>Feb Special Leave</th>
-                        <th>Mar Special Leave</th>
-                        <th>Apr Special Leave</th>
-                        <th>May Special Leave</th>
-                        <th>Jun Special Leave</th>
-                        <th>Jul Special Leave</th>
-                        <th>Aug Special Leave</th>
-                        <th>Sep Special Leave</th>
-                        <th>Oct Special Leave</th>
-                        <th>Nov Special Leave</th>
-                        <th>Dec Special Leave</th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
-    <?php
+     // Query for Employee Leave Credits by Month
+     $sql = "SELECT * FROM view_leave_credits where employee_id =" .$uid;
+     $result = $conn->query($sql);
+     
+     ?>
+     <div class="card">
+         <h5 class="card-header">Employee Leave Credits by Month</h5>
+         <div class="table-responsive text-nowrap">
+             <table class="table" id="zero_config">
+                 <thead>
+                     <tr>
+                         <th>Name</th>
+                         <th>Employment Type</th>
+                         <th>Sick Leave Credits</th>
+                         <th>Vacation Leave Credits</th>
+                         <th>Special Leave Credits</th>
+ 
+                     </tr>
+                 </thead>
+                 <tbody>
+                     <?php
+                     if ($result->num_rows > 0) {
+                         // Output data of each row
+                         while ($row = $result->fetch_assoc()) {
+                             echo "<tr>";
+                             echo "<td>" . $row["employee_fullname"] . "</td>";
+                             echo "<td>" . $row["employee_type"] . "</td>";
+                             echo "<td>" . $row["sickCredit"] . "</td>";
+                             echo "<td>" . $row["vacationCredit"] . "</td>";
+                             echo "<td>" . $row["specialCredit"] . "</td>";
+                             echo "</tr>";
+                         }
+                     } else {
+                         echo "<tr><td colspan='37'>No results found</td></tr>";
+                     }
+                     ?>
+                 </tbody>
+                 <tfoot class="table-border-bottom-0">
+                     <tr>
+                         <th>Name</th>
+                         <th>Employment Type</th>
+                         <th>Sick Leave Credits</th>
+                         <th>Vacation Leave Credits</th>
+                         <th>Special Leave Credits</th>
+                     </tr>
+                 </tfoot>
+             </table>
+         </div>
+     </div>
+     <?php
 }
 
 
 
 function displayLeaveManagement($conn, $eid)
 {
-    $sql = "SELECT * FROM leavemanagement inner join employeedetails on employeedetails.employee_id =leavemanagement.user_id where user_id=$eid";
+    $sql = "SELECT CONCAT(employeedetails.first_name,' ',employeedetails.last_name) as fullname, employeedetails.employment_type as employment_type, leavemanagement.more_info, leavemanagement.file_data, leavemanagement.leave_type,leavemanagement.end_date,leavemanagement.start_date, leavemanagement.leave_id FROM leavemanagement inner join employeedetails on employeedetails.employee_id =leavemanagement.user_id where user_id=$eid";
     $result = $conn->query($sql);
 ?>
     <div class="card">
@@ -851,7 +753,7 @@ function displayLeaveManagement($conn, $eid)
                         // Output data of each row
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
-                            echo "<td>" . $row["first_name"] . " " . $row["last_name"] . "</td>";
+                            echo "<td>" . $row["fullname"] .  "</td>";
                             echo "<td>" . $row["user_type"] . "</td>";
                             echo "<td>" . $row["more_info"] . "</td>";
                             echo "<td>"; ?>

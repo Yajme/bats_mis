@@ -1,4 +1,6 @@
-<?php include ("../model/conne.php"); ?>
+<?php include ("../model/conne.php");
+include './create-saln.php';
+ ?>
 <!DOCTYPE html>
 
 
@@ -125,20 +127,30 @@
       }
     }
   } else {
+$filePath;
+    if(isset($_GET['saln'])){
+      $saln = new SALN($conn,'../files/employee/saln/',$_GET['saln']);
+      $saln->CreateSALNFile();
+      $filePath = $saln->getFilePath();
+    
+    }
     if (isset($_POST['Register'])) {
       $file = $_FILES['file_path'];
-      if($_POST['file_type']=="saln"){
-        $filePath = '../files/employee/saln/' . $_POST['user_id']."-". basename($file['name']);
-        move_uploaded_file($file['tmp_name'], $filePath);
+      if(!isset($filePath)){
+        if($_POST['file_type']=="saln"){
+          $filePath = '../files/employee/saln/' . $_POST['user_id']."-". basename($file['name']);
+          move_uploaded_file($file['tmp_name'], $filePath);
+        }
+        else if($_POST['file_type']=="pds"){
+          $filePath = '../files/employee/pds/' . $_POST['user_id']."-".basename($file['name']);
+          move_uploaded_file($file['tmp_name'], $filePath);
+        }
+        else if($_POST['file_type']=="other"){
+          $filePath = '../files/employee/others/' . $_POST['user_id']."-".basename($file['name']);
+          move_uploaded_file($file['tmp_name'], $filePath);
+        }
       }
-      else if($_POST['file_type']=="pds"){
-        $filePath = '../files/employee/pds/' . $_POST['user_id']."-".basename($file['name']);
-        move_uploaded_file($file['tmp_name'], $filePath);
-      }
-      else if($_POST['file_type']=="other"){
-        $filePath = '../files/employee/others/' . $_POST['user_id']."-".basename($file['name']);
-        move_uploaded_file($file['tmp_name'], $filePath);
-      }
+      
 
       $user_id = $_POST['user_id'];
       $user_type = $_POST['user_type'];
@@ -220,8 +232,15 @@
                           <option <?php echo (isset($fileDataInfo['file_type']) && $fileDataInfo['file_type'] == 'saln') ? "selected" : ""; ?> value="saln">SALN (PDF File)</option>
                           <option <?php echo (isset($fileDataInfo['file_type']) && $fileDataInfo['file_type'] == 'other') ? "selected" : ""; ?> value="other">Other</option>
                         </select>
-                        <a class='btn btn-primary m-1' href='../files/saln.doc'  download>Download SALN Format File</a>
+                        <a class='btn btn-primary m-1' href='SALN.php?eid=<?php echo $_SESSION['admin_id']?>' id='create_saln_btn'>Create SALN File</a>
                         <a class='btn btn-primary m-1' href='../files/pds.xlsx'  download>Download PDS Format File</a>
+                        <script>
+    document.getElementById('basic-default-user-id').addEventListener('input', function() {
+        const userId = this.value;
+        const createSalnBtn = document.getElementById('create_saln_btn');
+        createSalnBtn.href = `SALN.php?eid=${userId}`;
+    });
+</script>
                       </div>
                     </div>
                     <div class="row mb-3">
